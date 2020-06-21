@@ -1,6 +1,7 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { Payment } from './payment.entity';
+import { CreatePaymentDto } from './create-payment.dto';
 
 @Controller('payments')
 export class PaymentsController {
@@ -15,5 +16,10 @@ export class PaymentsController {
   @Get(':id')
   getPaymentsById(@Param('id', ParseIntPipe) id: number): Promise<Payment> {
     return this.paymentsService.getPaymentsByContractId(id);
+  }
+
+  @Post()
+  createPayment(@Body() createTaskDto: CreatePaymentDto): Promise<Payment> {
+    return this.paymentsService.createPayment(createTaskDto);
   }
 }

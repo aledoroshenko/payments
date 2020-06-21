@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaymentsRepository } from './payments.repository';
 import { Payment } from './payment.entity';
+import { CreatePaymentDto } from './create-payment.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -20,5 +21,9 @@ export class PaymentsService {
 
     // TODO If not found
     return payment;
+  }
+
+  async createPayment(createPaymentDto: CreatePaymentDto): Promise<Payment> {
+    return this.paymentsRepository.createPayment(createPaymentDto);
   }
 }
