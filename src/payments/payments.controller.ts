@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
+import { Payment } from './payment.entity';
 
 @Controller('payments')
 export class PaymentsController {
@@ -12,7 +13,7 @@ export class PaymentsController {
   }
 
   @Get(':id')
-  getPaymentsById(@Param('id') id: string): string {
-    return this.paymentsService.getPaymentsById(id);
+  getPaymentsById(@Param('id', ParseIntPipe) id: number): Promise<Payment> {
+    return this.paymentsService.getPaymentsByContractId(id);
   }
 }
