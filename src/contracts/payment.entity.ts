@@ -1,6 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity, BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Contract } from './contract.entity';
-import { ManyToOne } from 'typeorm/browser';
+import { ManyToOne } from 'typeorm';
 
 
 @Entity()
@@ -8,11 +16,11 @@ export class Payment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @ManyToOne(type => Contract, contract => contract.contracts, { eager: false })
-  // contract: Contract;
+  @ManyToOne(type => Contract, contract => contract.payments, { eager: false })
+  contract: Contract;
 
   @Column()
-  contractId: string;
+  contractId: number;
 
   @Column()
   description: string;
@@ -20,18 +28,28 @@ export class Payment extends BaseEntity {
   @Column()
   value: number;
 
-  @Column()
-  time: string;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  time: Date;
 
-  @Column()
+  @Column({ default: false })
   isImported: boolean;
 
-  @Column()
-  createdAt: string;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 
-  @Column()
-  updatedAt: string;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
 
-  @Column()
+  @BeforeUpdate()
+  updateUpdateTimestamp() {
+    this.updatedAt = new Date;
+  }
+
+  @BeforeInsert()
+  updateCreateTimestamp() {
+    this.createdAt = new Date;
+  }
+
+  @Column({ default: false })
   isDeleted: boolean;
 }

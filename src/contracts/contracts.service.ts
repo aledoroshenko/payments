@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ContractsRepository } from './contracts.repository';
 import { Payment } from './payment.entity';
 import { PaymentsRepository } from './payments.repository';
+import { Contract } from './contract.entity';
+import { CreatePaymentDto } from './create-payment.dto';
 
 @Injectable()
 export class ContractsService {
@@ -21,7 +23,7 @@ export class ContractsService {
     return result;
   }
 
-  async getContractById(id: number) {
+  async getContractById(id: number): Promise<Contract> {
     const found = await this.contractsRepository.findOne({
       where: { id },
     });
@@ -29,6 +31,8 @@ export class ContractsService {
     if (!found) {
       throw new NotFoundException('Contract not found');
     }
+
+    const sum = found.payments.reduce((sum, payment) => sum + payment.value, 0);
 
     return found;
   }
@@ -41,5 +45,25 @@ export class ContractsService {
     console.log('RESULT', found);
 
     return found;
+  }
+
+  async createContract(): Promise<Contract> {
+    const contract = new Contract();
+    contract.description = 'Some description';
+
+    await contract.save();
+
+    return contract;
+  }
+
+  async createContractPayment(id: number, createPaymentDto: CreatePaymentDto): Promise<Payment> {
+    return this.paymentsRepository.createPayment(id, createPaymentDto);
+  }
+
+  async test() {
+    const found = await this.contractsRepository.findOne({
+      where: { id: 1 },
+    });
+
   }
 }
