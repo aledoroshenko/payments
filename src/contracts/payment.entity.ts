@@ -1,6 +1,5 @@
 import {
-  BaseEntity, BeforeInsert,
-  BeforeUpdate,
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -28,27 +27,17 @@ export class Payment extends BaseEntity {
   @Column()
   value: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   time: Date;
 
   @Column({ default: false })
   isImported: boolean;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-
-  @BeforeUpdate()
-  updateUpdateTimestamp() {
-    this.updatedAt = new Date;
-  }
-
-  @BeforeInsert()
-  updateCreateTimestamp() {
-    this.createdAt = new Date;
-  }
 
   @Column({ default: false })
   isDeleted: boolean;

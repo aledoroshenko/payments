@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { Contract } from './contract.entity';
 import { ContractsService } from './contracts.service';
 import { Payment } from './payment.entity';
@@ -16,7 +16,7 @@ export class ContractsController {
 
   @Get('/test')
   test() {
-    return this.contractsService.test()
+    return this.contractsService.test();
   }
 
   @Get(':id')
@@ -25,7 +25,8 @@ export class ContractsController {
   }
 
   @Get(':id/payments')
-  getContractPayments(@Param('id', ParseIntPipe) id: number): Promise<Payment[]> {
+  getContractPayments(@Param('id', ParseIntPipe) id: number, @Query() query): Promise<Payment[]> {
+    console.log('Query', query);
     return this.contractsService.getContractPayments(id);
   }
 
@@ -38,6 +39,4 @@ export class ContractsController {
   createContract(): Promise<Contract> {
     return this.contractsService.createContract();
   }
-
-
 }
